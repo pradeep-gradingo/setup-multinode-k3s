@@ -16,7 +16,9 @@ multipass launch -n worker2
 multipass exec control-plane -- bash -c "curl -sfL https://get.k3s.io | sh -"
 TOKEN=$(multipass exec control-plane -- bash -c "sudo cat /var/lib/rancher/k3s/server/node-token")
 multipass info control-plane
-HOST=control-plane.mshome.net  #replace with IP address shown in output of 'multipass info control-plane' command
+# we are using the host name followed by the root DNS name for the local home network that windows created (when using hypervisor with private networks). When not using Windows - see next line.
+# replace with IP address shown in output of 'multipass info control-plane' command
+HOST=control-plane.mshome.net 
 multipass exec worker1 -- bash -c "curl -sfL https://get.k3s.io | K3S_URL=\"https://$HOST:6443\" K3S_TOKEN=\"$TOKEN\" sh -"
 multipass exec worker2 -- bash -c "curl -sfL https://get.k3s.io | K3S_URL=\"https://$HOST:6443\" K3S_TOKEN=\"$TOKEN\" sh -"
 multipass exec control-plane -- bash -c "sudo cat /etc/rancher/k3s/k3s.yaml"  # and store it  in  k3s.yaml
